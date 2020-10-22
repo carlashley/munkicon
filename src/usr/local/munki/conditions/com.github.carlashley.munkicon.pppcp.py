@@ -36,6 +36,30 @@ class PPPCPConditions(object):
     def __init__(self):
         self.conditions = self._process()
 
+    def _parse_item(self, obj):
+        """Parse PPPCP object."""
+        result = {'ae_identifier': obj.get('AEReceiverIdentifier', None),
+                  'identifier': obj.get('Identifier', None),
+                  'auth': None}
+        # macOS 11+ introduces replacement of bool 'Allowed' with 'Authorization'
+        # which has three values: 'Allow', 'Deny', 'AllowStandardUserToSetSystemService'
+        # So look for 'Authorization' first then check for the bool 'Allowed' and if
+        # 'Allowed' is present, map back the bool to 'Allow' for 'True' and 'Deny'
+        # for 'False'.
+        try:
+            _auth = obj['Authorization']
+        except KeyError:
+            _auth = 'Allow' if obj['Allowed'] else 'Deny'
+
+        # Make the 'AllowStandardUserToSetSystemService' a little easier to type
+        # in munki conditionals statements.
+        if _auth == 'AllowStandardUserToSetSystemService':
+            _auth = 'allow_standard_user'
+
+        result['auth'] = _auth.lower()
+
+        return result
+
     def _pppcp_overrides(self):
         """Returns PPPCP identifiers from MDM overrides."""
         result = dict()
@@ -75,41 +99,36 @@ class PPPCPConditions(object):
             if _overrides:
                 for _item, _payload in _overrides.items():
                     for _k, _v in _payload.items():
-                        _ae_rec_identity = None
                         _tcc_type = _ktcc_map[_k]
 
                         # Apple Events has a deeper nesting structure.
                         if _k == 'kTCCServiceAppleEvents':
-                            _v = _v.get(_item)
+                            # There might be multiple dictionaries in the value for 'kTCCServiceAppleEvents'
+                            # I really hope not :|
+                            for _id, _vals in _v.items():
+                                _entry = self._parse_item(_vals)
+                                _ae_id = _entry.get('ae_identifier', None)
+                                _auth = _entry.get('auth', None)
+                                _id = _entry.get('identifier', None)
 
-                            _ae_rec_identity = _v.get('AEReceiverIdentifier', None)
+                                # Only add if there's an identifier
+                                if _ae_id and _auth and _id:
+                                    _tcc_str = '{},{},{}'.format(_auth, _id, _ae_id)
 
-                        _identifier = _v.get('Identifier', None)
+                                    if _tcc_str not in result[_tcc_type]:
+                                        result[_tcc_type].append(_tcc_str)
+                        else:
+                            _entry = self._parse_item(_v)
+                            _ae_id = _entry.get('ae_identifier', None)
+                            _auth = _entry.get('auth', None)
+                            _id = _entry.get('identifier', None)
 
-                        # macOS 11+ introduces replacement of bool 'Allowed' with 'Authorization'
-                        # which has three values: 'Allow', 'Deny', 'AllowStandardUserToSetSystemService'
-                        # So look for 'Authorization' first then check for the bool 'Allowed' and if
-                        # 'Allowed' is present, map back the bool to 'Allow' for 'True' and 'Deny'
-                        # for 'False'.
-                        try:
-                            _auth = _v['Authorization']
+                            # Only add if there's an identifier
+                            if _auth and _id:
+                                _tcc_str = '{},{},{}'.format(_auth, _id, _ae_id)
 
-                            # Make the 'AllowStandardUserToSetSystemService' a little easier to type
-                            # in munki conditionals statements.
-                            if _auth == 'AllowStandardUserToSetSystemService':
-                                _auth = 'allow_standard_user'
-                        except KeyError:
-                            _auth = 'Allow' if _v['Allowed'] else 'Deny'
-
-                        # Only add if there's an identifier
-                        if _identifier:
-                            _tcc_str = '{},{}'.format(_auth.lower(), _identifier)
-
-                            if _ae_rec_identity:
-                                _tcc_str = '{},{}'.format(_tcc_str, _ae_rec_identity)
-
-                            if _tcc_str not in result[_tcc_type]:
-                                result[_tcc_type].append(_tcc_str)
+                                if _tcc_str not in result[_tcc_type]:
+                                    result[_tcc_type].append(_tcc_str)
 
         return result
 
