@@ -2,7 +2,7 @@
 .DS_Store
 
 # Build folder
-dist/pkg
+dist/pkg/*.pkg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
