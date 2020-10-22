@@ -2,6 +2,7 @@ PKGTITLE="munkicon"
 PKGVERSION=1.0.$(shell /bin/date '+%Y%m%d')
 BUNDLEID="com.github.carlashley.munkicon"
 PROJECT="munkicon"
+$(shell echo ${PKGVERSION} > ./dist/version)
 
 
 pkg:
