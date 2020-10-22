@@ -1,0 +1,42 @@
+#!/bin/zsh
+set -x
+CONDITIONS_ROOT=/usr/local/munki/conditions
+MUNKICON_ROOT=${CONDITIONS_ROOT}/munkicon
+
+# Cleans up any old versions of these conditions.
+# -- User Account --
+if [ -f ${CONDITIONS_ROOT}/user_account_conditions.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/user_account_conditions.py 2>/dev/null
+fi
+
+# -- PPPCP --
+if [ -f ${CONDITIONS_ROOT}/pppcp_conditions.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/pppcp_conditions.py 2>/dev/null
+fi
+
+# -- MDM Enrolled --
+if [ -f ${CONDITIONS_ROOT}/mdm_enrolled.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/mdm_enrolled.py 2>/dev/null
+fi
+
+if [ -f ${CONDITIONS_ROOT}/mdm_enrolled_conditions.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/mdm_enrolled_conditions.py 2>/dev/null
+fi
+
+# -- KEXT's --
+if [ -f ${CONDITIONS_ROOT}/kext_conditions.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/kext_conditions.py 2>/dev/null
+fi
+
+if [ -f ${CONDITIONS_ROOT}/kext_mdm_conditions.py ]; then
+    /bin/rm -f ${CONDITIONS_ROOT}/kext_mdm_conditions.py 2>/dev/null
+fi
+
+# -- Old 'munkicon'
+if [ -d ${MUNKICON_ROOT} ]; then
+    /bin/rm -f ${MUNKICON_ROOT} 2>/dev/null
+fi
+
+# -- Old 'com.github.carlashley.munkicon'
+setopt +o nomatch  # Silence the 'zsh: no matches found'
+/bin/rm -f ${CONDITIONS_ROOT}/com.github.carlashley.*.py 2>/dev/null
