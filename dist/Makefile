@@ -2,6 +2,11 @@ PKGTITLE="munkicon"
 PKGVERSION=1.0.$(shell /bin/date '+%Y%m%d')
 BUNDLEID="com.github.carlashley.munkicon"
 PROJECT="munkicon"
+REQUIREMENTS="./dist/requirements.plist"
+COMPONENT_PKG=${PKGTITLE}-${PKGVERSION}.component.pkg
+DIST_PKG=munkicon-${PKGVERSION}.pkg
+DIST_DIR="./dist/pkg"
+# Version tracking for custom munki build.
 $(shell echo ${PKGVERSION} > ./dist/version)
 
 
@@ -14,6 +19,8 @@ pkg:
 		--identifier ${BUNDLEID} \
 		--version ${PKGVERSION} \
 		--ownership recommended \
-		--preserve-xattr ./dist/pkg/${PKGTITLE}-${PKGVERSION}.component.pkg
-	productbuild --identifier ${BUNDLEID} --package ./dist/pkg/${PKGTITLE}-${PKGVERSION}.component.pkg ./dist/pkg/munkicon-${PKGVERSION}.pkg
-	rm -f dist/pkg/${PKGTITLE}-${PKGVERSION}.component.pkg
+		--preserve-xattr ${DIST_DIR}/${COMPONENT_PKG}
+	productbuild --identifier ${BUNDLEID} \
+		--product ${REQUIREMENTS} \
+	    --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+	rm -f ${DIST_DIR}/${COMPONENT_PKG}
