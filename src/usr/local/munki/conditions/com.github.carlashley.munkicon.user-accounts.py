@@ -93,10 +93,10 @@ class UserAccounts(object):
                 if _p.returncode == 0:
                     # Output is on stderr, not stdout
                     if isinstance(_e, bytes):
-                        _e = _r.decode('utf-8').strip()
+                        _e = _e.decode('utf-8').strip()
 
-                        if 'ENABLED' in _e:
-                            _status = 'ENABLED'
+                    if 'ENABLED' in _e:
+                        _status = 'ENABLED'
 
                         result['secure_token'].append('{},{}'.format(_u, _status))
                 else:
