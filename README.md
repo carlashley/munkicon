@@ -170,7 +170,9 @@ Useful for obtaining various bits of system setup information.
 
 ### com.github.carlashley.munkicon.user-accounts.py
 Useful in determining if a package in a manifest should be made available based on whether a local user account exists on a client. For example, customised profile settings for a local user should only be installed if that user exists.
-- Generates one condition:
+- Generates two conditions:
 - - `user_home_path` that contains an array of username and home path locations (as a comma separated string) for _local_ accounts only (ignoring all inbuilt accounts except for `root`). This combination is used as home paths do not necessarily have the username forming part of the path.
+- - `secure_token` that contains an array of username and SecureToken status (as a comma seperated string) for local accounts only (ignoring all inbuilt accounts except for `root`).
 - Usage (on their own or combine):
 - - `ANY user_home_path == 'administrator,/Users/admin'`
+- - `ANY secure_token == 'administrator,ENABLED'`

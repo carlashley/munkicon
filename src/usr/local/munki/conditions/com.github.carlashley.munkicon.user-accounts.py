@@ -1,6 +1,9 @@
 #!/usr/local/munki/python
 import subprocess
 
+from distutils.version import StrictVersion
+from platform import mac_ver
+
 try:
     from munkicon import plist
     from munkicon import worker
@@ -73,11 +76,40 @@ class UserAccounts(object):
 
         return result
 
+    def _secure_tokens(self):
+        """Determine SecureToken status for user."""
+        result = {'secure_token': list()}
+
+        _users = self._users()
+
+        if _users and StrictVersion(mac_ver()[0]) >= StrictVersion('10.14'):
+            for _u in _users:
+                _status = 'DISABLED'
+                _cmd = ['/usr/sbin/sysadminctl', '-secureTokenStatus', _u]
+
+                _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                _r, _e = _p.communicate()
+
+                if _p.returncode == 0:
+                    # Output is on stderr, not stdout
+                    if isinstance(_e, bytes):
+                        _e = _r.decode('utf-8').strip()
+
+                        if 'ENABLED' in _e:
+                            _status = 'ENABLED'
+
+                        result['secure_token'].append('{},{}'.format(_u, _status))
+                else:
+                    pass
+
+        return result
+
     def _process(self):
         """Process all conditions and generate the condition dictionary."""
         result = dict()
 
         result.update(self._home_dirs())
+        result.update(self._secure_tokens())
 
         return result
 
