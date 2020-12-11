@@ -1,4 +1,4 @@
-#!/usr/local/munki/munki-python
+#!/usr/local/munki/python
 import subprocess
 
 try:
@@ -43,8 +43,8 @@ class Certificate():
                         _hash = _l.replace(_sha1_prefix, '')
                         _sha1.add(_hash)
 
-        result['certificates_sha1'] = list(_sha256)
-        result['certificates_sha256'] = list(_sha1)
+        result['certificates_sha1'] = list(_sha1)
+        result['certificates_sha256'] = list(_sha256)
 
         return result
 
