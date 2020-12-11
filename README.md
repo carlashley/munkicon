@@ -23,8 +23,17 @@ To get any errors that might end up in `stdout`/`stderr`, manually execute the p
 for i in /usr/local/munki/conditions/com.github.carlashley.munkicon.*.py; do $i; done
 ```
 
+### com.github.carlashley.munkicon.certificates.py
+Useful in determining if a certificate (system keychain) exists.
+- Generates two conditions:
+- - `certificates_sha1` is a list of the SHA-1 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain`
+- - `certificates_sha256` is a list of the SHA-256 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain`
+- Usage (on their own or combine):
+- - `ANY certificates_sha1 == '33AB5639BFD8E7B95EB1D8D0B87781D4FFEA4D5D'`
+- - `ANY certificates_sha256 == '1894A19C85BA153ACBF743AC4E43FC004C891604B26F8C69E1E83EA2AFC7C48F'`
+
 ### com.github.carlashley.munkicon.filevault.py
-Usefule in determining various states/results pertaining to FileVault.
+Useful in determining various states/results pertaining to FileVault.
 - Generates eight conditions:
 - - `filevault_active` is a boolean `True`/`False` based on FileVault being active or inactive. This differs from `filevault_status`. Use this to determine if the disk has been encrypted and therefore FileVault is on.
 - - `filevault_decryption_in_progress` is a boolean `True`/`False` if decryption is in progress (`True`), or not in progress (`False`).
