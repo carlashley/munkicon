@@ -25,12 +25,16 @@ for i in /usr/local/munki/conditions/com.github.carlashley.munkicon.*.py; do $i;
 
 ### com.github.carlashley.munkicon.certificates.py
 Useful in determining if a certificate (system keychain) exists.
-- Generates two conditions:
+- Generates four conditions:
 - - `certificates_sha1` is a list of the SHA-1 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain`
+- - `certificates_sha1_dates` is a list of the SHA-1 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain` with their `notBefore` and `notAfter` values converted to `YYYY-MM-DD HH:MM:SS TMZ` format (where `TMZ` is the timezone abbreviation). This is returned in a comma seperated format.
 - - `certificates_sha256` is a list of the SHA-256 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain`
+- - `certificates_sha256_dates` is a list of the SHA-256 values of certificates found by `security finder-certificate -a -Z /Library/Keychains/System.keychain` with their `notBefore` and `notAfter` values converted to `YYYY-MM-DD HH:MM:SS TMZ` format (where `TMZ` is the timezone abbreviation). This is returned in a comma seperated format.
 - Usage (on their own or combine):
 - - `ANY certificates_sha1 == '33AB5639BFD8E7B95EB1D8D0B87781D4FFEA4D5D'`
+- - `ANY certificates_sha1_dates == '33AB5639BFD8E7B95EB1D8D0B87781D4FFEA4D5D,2020-01-01 00:00:01 GMT to 2021-01-01 11:59:59 GMT'`
 - - `ANY certificates_sha256 == '1894A19C85BA153ACBF743AC4E43FC004C891604B26F8C69E1E83EA2AFC7C48F'`
+- - `ANY certificates_sha256_dates == '1894A19C85BA153ACBF743AC4E43FC004C891604B26F8C69E1E83EA2AFC7C48F,2020-01-01 00:00:01 GMT to 2021-01-01 11:59:59 GMT'`
 
 ### com.github.carlashley.munkicon.filevault.py
 Useful in determining various states/results pertaining to FileVault.
