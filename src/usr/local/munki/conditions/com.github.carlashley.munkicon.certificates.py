@@ -20,6 +20,20 @@ class Certificate():
     def __init__(self):
         self.conditions = self._process()
 
+    def _parse_date(self, prefix, val):
+        result = None
+        _timezone = val.strip().split()[-1]
+        _in_fmt = '%b %d %H:%M:%S %Y {}'.format(_timezone)
+        _out_fmt = '%Y-%m-%d %H:%M:%S {}'.format(_timezone)
+
+        _r = val.replace('{}='.format(prefix), '').strip()
+        _r = datetime.strptime(_r, _in_fmt)
+        _r = datetime.strftime(_r, _out_fmt)
+
+        result = _r
+
+        return result
+
     def _openssl_expiration(self, cert):
         """Get notBefore and notAfter dates of certificate using OpenSSL"""
         result = None
@@ -42,16 +56,10 @@ class Certificate():
                 # Convert the time details to a YYYY-MM-DD H:M:S TZ
                 # format
                 if 'notBefore' in _l:
-                    _bfr_date = _l.replace('notBefore=', '').strip()
-                    _tz = _bfr_date.split()[-1]
-                    _bfr_date = datetime.strptime(_bfr_date, '%b %d %H:%M:%S %Y {}'.format(_tz))
-                    _bfr_date = datetime.strftime(_bfr_date, '%Y-%m-%d %H:%M:%S {}'.format(_tz))
+                    _bfr_date = self._parse_date(prefix='notBefore', val=_l)
 
                 if 'notAfter' in _l:
-                    _end_date = _l.replace('notAfter=', '').strip()
-                    _tz = _end_date.split()[-1]
-                    _end_date = datetime.strptime(_end_date, '%b %d %H:%M:%S %Y {}'.format(_tz))
-                    _end_date = datetime.strftime(_end_date, '%Y-%m-%d %H:%M:%S {}'.format(_tz))
+                    _end_date = self._parse_date(prefix='notAfter', val=_l)
 
             if _bfr_date and _end_date:
                 result = '{} to {}'.format(_bfr_date, _end_date)
