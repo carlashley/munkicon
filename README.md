@@ -35,13 +35,13 @@ Useful in determining if a certificate (system keychain) exists.
 ### com.github.carlashley.munkicon.filevault.py
 Useful in determining various states/results pertaining to FileVault.
 - Generates eight conditions:
-- - `filevault_active` is a boolean `True`/`False` based on FileVault being active or inactive. This differs from `filevault_status`. Use this to determine if the disk has been encrypted and therefore FileVault is on.
-- - `filevault_decryption_in_progress` is a boolean `True`/`False` if decryption is in progress (`True`), or not in progress (`False`).
-- - `filevault_deferral` returns `not_found` if there are no defferals, but will return `active` if deferrals are found.
-- - `filevault_encryption_in_progress` is a boolean `True`/`False` if encryption is in progress (`True`), or not in progress (`False`).
-- - `filevault_institution_key` is a boolean `True`/`False` based on whether an institutional recovery key is in use.
-- - `filevault_personal_key` is a boolean `True`/`False` based on whether an personal recovery key is in use.
-- - `filevault_status` returns a string of either `on` or `off`. This differes from `filevault_active`. Use this to determine if FileVault has been turned on or off, and the disk is in the process of being encrypted or decrypted.
+- - `filevault_active` is a Boolean `True`/`False` based on FileVault being active or inactive. This differs from `filevault_status`. Use this to determine if the disk has been encrypted and therefore FileVault is on.
+- - `filevault_decryption_in_progress` is a Boolean `True`/`False` if decryption is in progress (`True`), or not in progress (`False`).
+- - `filevault_deferral` returns `not_found` if there are no deferrals, but will return `active` if deferrals are found.
+- - `filevault_encryption_in_progress` is a Boolean `True`/`False` if encryption is in progress (`True`), or not in progress (`False`).
+- - `filevault_institution_key` is a Boolean `True`/`False` based on whether an institutional recovery key is in use.
+- - `filevault_personal_key` is a Boolean `True`/`False` based on whether a personal recovery key is in use.
+- - `filevault_status` returns a string of either `on` or `off`. This differs from `filevault_active`. Use this to determine if FileVault has been turned on or off, and the disk is in the process of being encrypted or decrypted.
 - - `filevault_users` returns an array of usernames. The UUID for the user is not returned as this is not necessarily predictable.
 - Usage (on their own or combine):
 - - `filevault_active == TRUE`
@@ -68,7 +68,7 @@ Useful in determining if a package in a manifest should be made available (or no
 - - `ANY kext_team_bundle == 'EG7KH642X6,com.vmware.kext.vmioplug.18.1.2'`
 
 ### com.github.carlashley.munkicon.mdm-enrolled.py
-Useful in determining if a package in a manifest should be made available (or not) if a client is or is not enrolled in an MDM, For example, a particular set of apps might only need to be deployed to MDM supervised devices.
+Useful in determining if a package in a manifest should be made available (or not) if a client is or is not enrolled in an MDM. For example, a particular set of apps might only need to be deployed to MDM supervised devices.
 - Generates two conditions:
 - - `enrolled_via_dep` will be `yes` or `no`.
 - - `mdm_enrollment` will be `yes_user_approved` or `no`.
@@ -77,7 +77,7 @@ Useful in determining if a package in a manifest should be made available (or no
 - - `mdm_enrollment == 'yes_user_approved'`
 
 ### com.github.carlashley.munkicon.pppcp.py
-Useful in determining if a package in a manifest should be made available based on whether any MDM deployed PPPCP payloads exist for a specifc Bundle ID or path. For example, the user experience for a particular app might be cumbersome if it is installed before a PPPCP payload is pushed to the client via MDM.
+Useful in determining if a package in a manifest should be made available based on whether any MDM deployed PPPCP payloads exist for a specific Bundle ID or path. For example, the user experience for a particular app might be cumbersome if it is installed before a PPPCP payload is pushed to the client via MDM.
 
 Each condition generates an array of strings that indicate if the PPPCP payload is `allow`, `deny`, or `allow_user`. The format returned is either:
 - `allow,org.example.foo` or `allow,/Applications/Example.app`
@@ -181,7 +181,7 @@ Useful for obtaining various bits of system setup information.
 Useful in determining if a package in a manifest should be made available based on whether a local user account exists on a client. For example, customised profile settings for a local user should only be installed if that user exists.
 - Generates two conditions:
 - - `user_home_path` that contains an array of username and home path locations (as a comma separated string) for _local_ accounts only (ignoring all inbuilt accounts except for `root`). This combination is used as home paths do not necessarily have the username forming part of the path.
-- - `secure_token` that contains an array of username and SecureToken status (as a comma seperated string) for local accounts only (ignoring all inbuilt accounts except for `root`).
+- - `secure_token` that contains an array of username and SecureToken status (as a comma separated string) for local accounts only (ignoring all inbuilt accounts except for `root`).
 - Usage (on their own or combine):
 - - `ANY user_home_path == 'administrator,/Users/admin'`
 - - `ANY secure_token == 'administrator,ENABLED'`
