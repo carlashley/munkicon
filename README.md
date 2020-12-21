@@ -120,6 +120,13 @@ allow,org.example.foo,/Applications/Microsoft Remote Desktop.app
 - - `ANY tcc_desktop_folder == 'deny,us.zoom.xos'`
 - - `ANY tcc_apple_events == 'allow,net.pulsesecure.Pulse-Secure,net.pulsesecure.Pulse-Secure'`
 
+### com.github.carlashley.munkicon.profiles.py
+Useful to list the human friendly name of system profiles that have been installed.
+- Generates one condition:
+- - `installed_profiles` is an array of human readable names as output by the `profiles list -verbose` command.
+- Usage (on their own or combine):
+- - `ANY installed_profiles = 'SimpleMDM CA'`
+
 ### com.github.carlashley.munkicon.python.py
 Useful in determining basic version information about various Python versions.
 - Generates six conditions:
