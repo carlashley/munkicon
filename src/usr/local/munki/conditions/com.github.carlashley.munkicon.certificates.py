@@ -86,41 +86,41 @@ class Certificate():
             if isinstance(_r, bytes):
                 _r = _r.decode('utf-8').strip()
 
-                for _cert in _r.split(_end_cert_str):
-                    _sha1 = None
-                    _sha256 = None
+            for _cert in _r.split(_end_cert_str):
+                _sha1 = None
+                _sha256 = None
 
-                    for _l in _cert.splitlines():
-                        if _sha1_prefix in _l:
-                            _sha1 = _l
-                        elif _sha256_prefix in _l:
-                            _sha256 = _l
+                for _l in _cert.splitlines():
+                    if _sha1_prefix in _l:
+                        _sha1 = _l
+                    elif _sha256_prefix in _l:
+                        _sha256 = _l
 
-                    if _sha1:
-                        _sha1 = _sha1.replace(_sha1_prefix, '')
+                if _sha1:
+                    _sha1 = _sha1.replace(_sha1_prefix, '')
 
-                        if _sha1 not in result['certificates_sha1']:
-                            result['certificates_sha1'].append(_sha1)
+                    if _sha1 not in result['certificates_sha1']:
+                        result['certificates_sha1'].append(_sha1)
 
-                    if _sha256:
-                        _sha256 = _sha256.replace(_sha256_prefix, '')
+                if _sha256:
+                    _sha256 = _sha256.replace(_sha256_prefix, '')
 
-                        if _sha256 not in result['certificates_sha256']:
-                            result['certificates_sha256'].append(_sha256)
+                    if _sha256 not in result['certificates_sha256']:
+                        result['certificates_sha256'].append(_sha256)
 
-                    if 'BEGIN CERTIFICATE' in _cert:
-                        _cert = str('{}{}'.format(_cert, _end_cert_str).strip()).encode()
-                        _dates = self._openssl_expiration(cert=_cert)
+                if 'BEGIN CERTIFICATE' in _cert:
+                    _cert = str('{}{}'.format(_cert, _end_cert_str).strip()).encode()
+                    _dates = self._openssl_expiration(cert=_cert)
 
-                        if (_sha1, _sha256, _dates):
-                            _sha1_result = '{},{}'.format(_sha1, _dates)
-                            _sha256_result = '{},{}'.format(_sha256, _dates)
+                    if (_sha1, _sha256, _dates):
+                        _sha1_result = '{},{}'.format(_sha1, _dates)
+                        _sha256_result = '{},{}'.format(_sha256, _dates)
 
-                            if _sha1_result not in result['certificates_sha1_dates']:
-                                result['certificates_sha1_dates'].append(_sha1_result)
+                        if _sha1_result not in result['certificates_sha1_dates']:
+                            result['certificates_sha1_dates'].append(_sha1_result)
 
-                            if _sha256_result not in result['certificates_sha256_dates']:
-                                result['certificates_sha256_dates'].append(_sha256_result)
+                        if _sha256_result not in result['certificates_sha256_dates']:
+                            result['certificates_sha256_dates'].append(_sha256_result)
 
         return result
 
