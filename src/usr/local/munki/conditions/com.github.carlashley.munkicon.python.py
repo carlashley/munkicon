@@ -1,4 +1,4 @@
-#!/usr/local/munki/python
+#!/usr/local/munki/munki-python
 import os
 import subprocess
 
@@ -31,7 +31,7 @@ class PythonConditions(object):
                   'official_python3_path': '',
                   'official_python3_ver': ''}
 
-        _munki_pythons = ['/usr/local/munki/python', '/usr/local/munki/munki-python']
+        _munki_pythons = ['/usr/local/munki/munki-python', '/usr/local/munki/munki-python']
         _munki_python = [_x for _x in _munki_pythons if os.path.exists(_x)][0]
 
         _python_paths = {'mac_os_python_path': '/usr/bin/python',
@@ -46,6 +46,10 @@ class PythonConditions(object):
                 # Include the munki python symlink in use
                 if _k == 'munki_python_path':
                     result['munki_python_symlink'] = _v
+
+                # Include the symlink path of official python
+                if _k == 'official_python3_path':
+                    result['official_python3_symlink'] = _v
 
                 _cmd = [_real_path, '--version']
 
