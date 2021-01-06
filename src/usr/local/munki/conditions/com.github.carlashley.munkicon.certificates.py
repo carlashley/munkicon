@@ -13,6 +13,8 @@ except ImportError:
 #       'certificates_sha1_dates'
 #       'certificates_sha256'
 #       'certificates_sha246_dates'
+#       'certificates_subject'
+#       'certificates_subject_dates'
 
 
 class Certificate():
@@ -36,12 +38,12 @@ class Certificate():
 
     def _openssl_expiration(self, cert):
         """Get notBefore and notAfter dates of certificate using OpenSSL"""
-        result = None
+        result = {'dates': None, 'subject': None}
         _bfr_date = None
         _end_date = None
 
         # Note, use 'stdin' to 'pipe' certificate through
-        _cmd = ['/usr/bin/openssl', 'x509', '-dates', '-noout']
+        _cmd = ['/usr/bin/openssl', 'x509', '-dates', '-subject', '-noout']
         _p = subprocess.Popen(_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         _p.stdin.write(cert)
         _r, _e = _p.communicate()
@@ -61,18 +63,22 @@ class Certificate():
                 if 'notAfter' in _l:
                     _end_date = self._parse_date(prefix='notAfter', val=_l)
 
+                if 'subject' in _l:
+                    result['subject'] = _l.replace('subject= ', '')
+
             if _bfr_date and _end_date:
-                result = '{} to {}'.format(_bfr_date, _end_date)
+                result['dates'] = '{} to {}'.format(_bfr_date, _end_date)
 
         return result
-        # openssl x509 -enddate -noout
 
     def _find_certificates(self):
         """Find certificates and process dates.."""
         result = {'certificates_sha1': list(),
                   'certificates_sha1_dates': list(),
                   'certificates_sha256': list(),
-                  'certificates_sha256_dates': list()}
+                  'certificates_sha256_dates': list(),
+                  'certificates_subject': list(),
+                  'certificates_subject_dates': list()}
         _end_cert_str = '-----END CERTIFICATE-----'
         _sha1_prefix = 'SHA-1 hash: '
         _sha256_prefix = 'SHA-256 hash: '
@@ -110,7 +116,9 @@ class Certificate():
 
                 if 'BEGIN CERTIFICATE' in _cert:
                     _cert = str('{}{}'.format(_cert, _end_cert_str).strip()).encode()
-                    _dates = self._openssl_expiration(cert=_cert)
+                    _decoded = self._openssl_expiration(cert=_cert)
+                    _dates = _decoded['dates']
+                    _subject = _decoded['subject']
 
                     if (_sha1, _sha256, _dates):
                         _sha1_result = '{},{}'.format(_sha1, _dates)
@@ -121,6 +129,15 @@ class Certificate():
 
                         if _sha256_result not in result['certificates_sha256_dates']:
                             result['certificates_sha256_dates'].append(_sha256_result)
+
+                    if _subject and _subject not in result['certificates_subject']:
+                        result['certificates_subject'].append(_subject)
+
+                    if _subject and _dates:
+                        _subj_dates = '{},{}'.format(_subject, _dates)
+
+                        if _subj_dates not in result['certificates_subject_dates']:
+                            result['certificates_subject_dates'].append(_subj_dates)
 
         return result
 
