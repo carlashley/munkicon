@@ -167,7 +167,7 @@ Useful in determining if a package in a manifest should be made available (or no
 
 ### com.github.carlashley.munkicon.system-setup.py
 Useful for obtaining various bits of system setup information.
-- Generates 11 conditions:
+- Generates 12 conditions:
 - - `ard_enabled` is either `True` or `False`. Relies on `/usr/libexec/mdmclient` existing.
 - - `cups_web_interface_enabled` is either `True` or `False`.
 - - `efi_password_enabled` is either `True` or `False`. Relies on `/usr/libexec/mdmclient` existing.
@@ -175,6 +175,7 @@ Useful for obtaining various bits of system setup information.
 - - `ntp_servers` returns an array of all servers found in `/etc/ntp.conf`.
 - - `printer_sharing_enabled` is either `True` or `False`.
 - - `remote_apple_events_enabled` is either `True` or `False`.
+- - `rosetta2_installed` is either `True` or `False`.
 - - `sip_enabled` is either `True` or `False`.
 - - `ssh_enabled` is either `True` or `False`.
 - - `timezone` returns the timezone as a string in the format `"Australia/Melbourne"`.
@@ -187,6 +188,7 @@ Useful for obtaining various bits of system setup information.
 - - `ANY ntp_servers == 'time.apple.asia.com'`
 - - `printer_sharing_enabled == FALSE`
 - - `remote_apple_events_enabled == FALSE`
+- - `rosetta2_installed == TRUE`
 - - `sip_enabled == TRUE`
 - - `ssh_enabled == TRUE`
 - - `timezone "Australia/Melbourne"`

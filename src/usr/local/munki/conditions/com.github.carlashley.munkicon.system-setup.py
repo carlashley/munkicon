@@ -2,6 +2,8 @@
 import os
 import subprocess
 
+from pathlib import Path
+
 try:
     from munkicon import worker
 except ImportError:
@@ -18,6 +20,7 @@ except ImportError:
 #       'ssh_enabled'
 #       'timezone'
 #       'wake_on_lan'
+#       'rosetta2_installed'
 
 
 class SystemSetupConditions(object):
@@ -163,6 +166,20 @@ class SystemSetupConditions(object):
 
         return result
 
+    def _rosetta2_state(self):
+        """Rosetta 2 state."""
+        result = {'rosetta2_installed': False}
+
+        _file_checks = ['/Library/Apple/usr/libexec/oah/oahd',
+                        '/Library/Apple/usr/libexec/oah/oahd-helper',
+                        '/Library/Apple/usr/libexec/oah/oahd-root-helper',
+                        '/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd-root-helper.plist',
+                        '/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist']
+
+        result['rosetta2_installed'] = all([Path(_f).exists() for _f in _file_checks])
+
+        return result
+
     def _process(self):
         """Process all conditions and generate the condition dictionary."""
         result = dict()
@@ -172,6 +189,7 @@ class SystemSetupConditions(object):
         result.update(self._printer_state())
         result.update(self._sip_status())
         result.update(self._systemsetup())
+        result.update(self._rosetta2_state())
 
         return result
 
