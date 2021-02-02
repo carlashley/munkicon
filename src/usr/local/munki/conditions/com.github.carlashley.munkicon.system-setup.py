@@ -6,8 +6,10 @@ from pathlib import Path
 
 try:
     from munkicon import worker
+    from munkicon import plist
 except ImportError:
     from .munkicon import worker
+    from .munkicon import plist
 
 # Keys: 'ard_enabled'
 #       'cups_web_interface_enabled'
@@ -21,6 +23,7 @@ except ImportError:
 #       'timezone'
 #       'wake_on_lan'
 #       'rosetta2_installed'
+#       'rosetta2_version'
 
 
 class SystemSetupConditions(object):
@@ -180,6 +183,28 @@ class SystemSetupConditions(object):
 
         return result
 
+    def _rosetta2_version(self, bundle_id='com.apple.pkg.RosettaUpdateAuto'):
+        """Rosetta 2 version."""
+        result = {'rosetta2_version': ''}
+        _ver = ''
+
+        _cmd = ['/usr/sbin/pkgutil', '--pkg-info-plist', bundle_id]
+
+        _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        _r, _e = _p.communicate()
+
+        if _p.returncode == 0:
+            if _r:
+                try:
+                    _ver = plist.readPlistFromString(obj=_r)['pkg-version']
+                except KeyError:
+                    pass
+
+                result['rosetta2_version'] = _ver
+
+        return result
+
+
     def _process(self):
         """Process all conditions and generate the condition dictionary."""
         result = dict()
@@ -190,6 +215,7 @@ class SystemSetupConditions(object):
         result.update(self._sip_status())
         result.update(self._systemsetup())
         result.update(self._rosetta2_state())
+        result.update(self._rosetta2_version())
 
         return result
 
