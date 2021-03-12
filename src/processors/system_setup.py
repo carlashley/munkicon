@@ -1,8 +1,8 @@
-#!/usr/local/munki/munki-python
 import os
 import subprocess
 
 from pathlib import Path
+
 
 try:
     from munkicon import worker
@@ -220,12 +220,8 @@ class SystemSetupConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     se = SystemSetupConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=se.conditions)
-
-
-if __name__ == '__main__':
-    main()

@@ -1,5 +1,6 @@
-#!/usr/local/munki/munki-python
 import os
+
+
 
 try:
     from munkicon import plist
@@ -110,12 +111,8 @@ class SystemExtensionPolicyConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     s_ext = SystemExtensionPolicyConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=s_ext.conditions)
-
-
-if __name__ == '__main__':
-    main()

@@ -52,7 +52,5 @@ class MunkiConWorker(object):
                 LOG.info('%s: Conditions written.' % self._log_src)
             elif not _data:
                 LOG.info('%s: No conditions written.' % self._log_src)
-
-            sys.exit(0)
         except Exception as e:
             LOG.error('%s' % e)

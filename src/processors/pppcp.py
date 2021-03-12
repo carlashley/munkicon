@@ -1,5 +1,6 @@
-#!/usr/local/munki/munki-python
 import os
+
+
 
 try:
     from munkicon import plist
@@ -141,12 +142,8 @@ class PPPCPConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     pppcp = PPPCPConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=pppcp.conditions)
-
-
-if __name__ == '__main__':
-    main()

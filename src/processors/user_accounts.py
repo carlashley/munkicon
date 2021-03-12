@@ -1,8 +1,9 @@
-#!/usr/local/munki/munki-python
 import subprocess
 
 from distutils.version import StrictVersion
 from platform import mac_ver
+
+
 
 try:
     from munkicon import plist
@@ -114,12 +115,8 @@ class UserAccounts(object):
         return result
 
 
-def main():
+def runner(dest):
     users = UserAccounts()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=users.conditions)
-
-
-if __name__ == '__main__':
-    main()

@@ -1,7 +1,8 @@
-#!/usr/local/munki/munki-python
 import os
 import subprocess
 import sys
+
+
 
 try:
     from munkicon import worker
@@ -133,12 +134,8 @@ class FileVaultConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     fde = FileVaultConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=fde.conditions)
-
-
-if __name__ == '__main__':
-    main()

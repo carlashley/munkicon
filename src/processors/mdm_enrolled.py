@@ -1,6 +1,5 @@
-#!/usr/local/munki/munki-python
-
 import subprocess
+
 
 
 try:
@@ -49,12 +48,8 @@ class MDMEnrolledConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     mdm = MDMEnrolledConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=mdm.conditions)
-
-
-if __name__ == '__main__':
-    main()

@@ -1,8 +1,8 @@
-#!/usr/local/munki/munki-python
 import re
 import subprocess
 
 from datetime import datetime
+
 
 try:
     from munkicon import worker
@@ -150,12 +150,8 @@ class Certificate():
         return result
 
 
-def main():
+def runner(dest):
     certs = Certificate()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=certs.conditions)
-
-
-if __name__ == '__main__':
-    main()

@@ -1,6 +1,7 @@
-#!/usr/local/munki/munki-python
 import os
 import sqlite3
+
+
 
 try:
     from munkicon import worker
@@ -113,12 +114,8 @@ class KextPolicyConditions(object):
         return result
 
 
-def main():
+def runner(dest):
     kext = KextPolicyConditions()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=kext.conditions)
-
-
-if __name__ == '__main__':
-    main()

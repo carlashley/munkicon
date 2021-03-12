@@ -12,7 +12,7 @@ $(shell echo ${PKGVERSION} > ./dist/version)
 
 pkg:
 	rm -f dist/pkg/munkicon-*.pkg
-	pkgbuild --root ./src \
+	pkgbuild --root ./dist/pkgroot \
 		--scripts ./scripts \
 		--filter '.DS_Store' \
 		--filter '__pycache__' \

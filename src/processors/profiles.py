@@ -1,5 +1,6 @@
-#!/usr/local/munki/munki-python
 import subprocess
+
+
 
 try:
     from munkicon import worker
@@ -52,12 +53,8 @@ class Profiles():
         return result
 
 
-def main():
+def runner(dest):
     profiles = Profiles()
-    mc = worker.MunkiConWorker(log_src=__file__)
+    mc = worker.MunkiConWorker(conditions_file=dest, log_src=__file__)
 
     mc.write(conditions=profiles.conditions)
-
-
-if __name__ == '__main__':
-    main()
