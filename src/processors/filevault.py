@@ -2,8 +2,6 @@ import os
 import subprocess
 import sys
 
-
-
 try:
     from munkicon import worker
 except ImportError:

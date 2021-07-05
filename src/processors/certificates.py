@@ -3,7 +3,6 @@ import subprocess
 
 from datetime import datetime
 
-
 try:
     from munkicon import worker
 except ImportError:

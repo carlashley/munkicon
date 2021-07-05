@@ -7,7 +7,7 @@ from os import geteuid, remove
 from sys import exit, stderr
 from pathlib import Path
 
-VERSION = '1.0.20210312'
+VERSION = '1.0.20210705'
 
 _ARGS = {
     'certificates': {'args': ['--certificates'],

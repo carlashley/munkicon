@@ -1,8 +1,6 @@
 import os
 import sqlite3
 
-
-
 try:
     from munkicon import worker
 except ImportError:

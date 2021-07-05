@@ -1,7 +1,5 @@
 import os
 
-
-
 try:
     from munkicon import plist
     from munkicon import worker

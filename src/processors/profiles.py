@@ -1,7 +1,5 @@
 import subprocess
 
-
-
 try:
     from munkicon import worker
 except ImportError:

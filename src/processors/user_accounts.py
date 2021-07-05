@@ -3,8 +3,6 @@ import subprocess
 from distutils.version import StrictVersion
 from platform import mac_ver
 
-
-
 try:
     from munkicon import plist
     from munkicon import worker
