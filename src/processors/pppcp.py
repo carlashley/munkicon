@@ -1,7 +1,5 @@
 import os
 
-
-
 try:
     from munkicon import plist
     from munkicon import worker
@@ -126,7 +124,7 @@ class PPPCPConditions(object):
 
                             # Only add if there's an identifier
                             if _auth and _id:
-                                _tcc_str = '{},{},{}'.format(_auth, _id, _ae_id)
+                                _tcc_str = '{},{}'.format(_auth, _id)
 
                                 if _tcc_str not in result[_tcc_type]:
                                     result[_tcc_type].append(_tcc_str)
