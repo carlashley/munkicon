@@ -3,7 +3,6 @@ import subprocess
 
 from pathlib import Path
 
-
 try:
     from munkicon import worker
     from munkicon import plist
@@ -14,6 +13,7 @@ except ImportError:
 # Keys: 'ard_enabled'
 #       'cups_web_interface_enabled'
 #       'efi_password_enabled'
+#       'efi_password_supported'
 #       'ntp_enabled'
 #       'ntp_servers'
 #       'printer_sharing_enabled'
@@ -30,6 +30,19 @@ class SystemSetupConditions(object):
     """SystemSetup conditions."""
     def __init__(self):
         self.conditions = self._process()
+
+    def _arch(self):
+        """Internal arch check as some features not supported on Apple Silicon."""
+        result = None
+
+        _cmd = ['/usr/bin/arch']
+
+        _p = subprocess.run(_cmd, capture_output=True, encoding='utf-8')
+
+        if _p.returncode == 0:
+            result = _p.stdout.strip()
+
+        return result
 
     def _ard_state(self):
         """ARD State."""
@@ -56,19 +69,26 @@ class SystemSetupConditions(object):
 
     def _efi_password_state(self):
         """EFI Password State."""
-        result = {'efi_password_enabled': ''}
+        result = {'efi_password_enabled': '',
+                  'efi_password_supported': ''}
+        _arch = self._arch()
 
-        _cmd = ['/usr/sbin/firmwarepasswd', '-check']
+        if 'arm' not in _arch:
+            _cmd = ['/usr/sbin/firmwarepasswd', '-check']
 
-        _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        _r, _e = _p.communicate()
+            _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            _r, _e = _p.communicate()
 
-        if _p.returncode == 0:
-            if _r:
-                if isinstance(_r, bytes):
-                    _r = _r.decode('utf-8').strip()
+            if _p.returncode == 0:
+                if _r:
+                    if isinstance(_r, bytes):
+                        _r = _r.decode('utf-8').strip()
 
-                result['efi_password_enabled'] = 'Yes' in _r.split(': ')
+                    result['efi_password_enabled'] = 'Yes' in _r.split(': ')
+                    result['efi_password_supported'] = True
+        elif 'arm' in _arch:
+            result['efi_password_enabled'] = False
+            result['efi_password_supported'] = False
 
         return result
 
@@ -203,7 +223,6 @@ class SystemSetupConditions(object):
                 result['rosetta2_version'] = _ver
 
         return result
-
 
     def _process(self):
         """Process all conditions and generate the condition dictionary."""
