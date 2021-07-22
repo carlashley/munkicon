@@ -195,9 +195,7 @@ class SystemSetupConditions(object):
 
         _file_checks = ['/Library/Apple/usr/libexec/oah/oahd',
                         '/Library/Apple/usr/libexec/oah/oahd-helper',
-                        '/Library/Apple/usr/libexec/oah/oahd-root-helper',
-                        '/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd-root-helper.plist',
-                        '/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist']
+                        '/Library/Apple/usr/libexec/oah/oahd-root-helper']
 
         result['rosetta2_installed'] = all([Path(_f).exists() for _f in _file_checks])
 
