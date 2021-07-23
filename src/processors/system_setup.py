@@ -4,9 +4,11 @@ import subprocess
 from pathlib import Path
 
 try:
+    from munkicon import common
     from munkicon import worker
     from munkicon import plist
 except ImportError:
+    from .munkicon import common
     from .munkicon import worker
     from .munkicon import plist
 
@@ -193,11 +195,17 @@ class SystemSetupConditions(object):
         """Rosetta 2 state."""
         result = {'rosetta2_installed': False}
 
-        _file_checks = ['/Library/Apple/usr/libexec/oah/oahd',
-                        '/Library/Apple/usr/libexec/oah/oahd-helper',
-                        '/Library/Apple/usr/libexec/oah/oahd-root-helper']
+        # After macOS 11.4, path prefix appears to have changed
+        if common.os_version() > common.vers_convert('11.4'):
+            _rosetta_prefix = '/usr/libexec/rosetta'
+        else:
+            _rosetta_prefix = '/Library/Apple/usr/libexec/oah'
 
-        result['rosetta2_installed'] = all([Path(_f).exists() for _f in _file_checks])
+        _file_checks = ['oahd',
+                        'oahd-helper',
+                        'oahd-root-helper']
+
+        result['rosetta2_installed'] = all([Path(_rosetta_prefix).joinpath(_f).exists() for _f in _file_checks])
 
         return result
 
