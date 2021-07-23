@@ -27,6 +27,7 @@ while getopts "c:p:h" option; do
             echo "                 For example: \"Developer ID Installer: munkicon (U01A32EXMP)\""
             echo "    -p python    Path to the python interpreter."
             echo "                 For example: /usr/local/munki/munki-python"
+            exit
             ;;
         *)
             INSTALLER_CERT=""
