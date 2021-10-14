@@ -1,4 +1,5 @@
 """Wrappers for plistlib"""
+import logging
 import os
 import plistlib
 import shutil
@@ -7,6 +8,8 @@ import tempfile
 
 from sys import version_info
 from xml.parsers.expat import ExpatError
+
+LOG = logging.getLogger(__name__)
 
 # plistlib.readPlist() and plistlib.writePlist() deprecated in Python 3.4+
 DEPRECATED = (version_info.major == 3 and version_info.minor > 4)
@@ -18,26 +21,30 @@ def readPlist(path):
 
     if os.path.exists(path):
         # plistlib.readPlist() deprecated in Python 3.4+
-        if DEPRECATED:
-            with open(path, 'rb') as _f:
-                result = plistlib.load(_f)
-        else:
-            try:
-                result = plistlib.readPlist(path)
-            except ExpatError:
-                _bn = os.path.basename(path)
-                _tmp_dir = tempfile.mkdtemp()
-                _tmp_path = os.path.join(_tmp_dir, _bn)
-                shutil.copy(path, _tmp_path)
+        try:
+            if DEPRECATED:
+                with open(path, 'rb') as _f:
+                    result = plistlib.load(_f)
+            else:
+                try:
+                    result = plistlib.readPlist(path)
+                except ExpatError:
+                    _bn = os.path.basename(path)
+                    _tmp_dir = tempfile.mkdtemp()
+                    _tmp_path = os.path.join(_tmp_dir, _bn)
+                    shutil.copy(path, _tmp_path)
 
-                _cmd = ['/usr/bin/plutil', '-convert', 'xml1', _tmp_path]
+                    _cmd = ['/usr/bin/plutil', '-convert', 'xml1', _tmp_path]
 
-                _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                _r, _e = _p.communicate()
+                    _p = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    _r, _e = _p.communicate()
 
-                if _p.returncode == 0:
-                    result = plistlib.readPlist(_tmp_path)
-                    os.remove(_tmp_path)
+                    if _p.returncode == 0:
+                        result = plistlib.readPlist(_tmp_path)
+                        os.remove(_tmp_path)
+        except Exception as e:
+            LOG.error('Exception reading %s - %s' % (path, e))
+            result = None
 
     return result
 
@@ -68,6 +75,12 @@ def writePlist(path, data):
 
     if DEPRECATED:
         with open(path, 'wb') as _f:
-            plistlib.dump(_data, _f)
+            try:
+                plistlib.dump(_data, _f)
+            except Exception as e:
+                LOG.error('Exception writing %s - %s' % (path, e))
     else:
-        plistlib.writePlist(_data, path)
+        try:
+            plistlib.writePlist(_data, path)
+        except Exception as e:
+            LOG.error('Exception writing %s - %s' % (path, e))
