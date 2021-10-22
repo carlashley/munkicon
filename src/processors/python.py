@@ -31,7 +31,11 @@ class PythonConditions(object):
                   'official_python3_ver': ''}
 
         _munki_pythons = ['/usr/local/munki/munki-python', '/usr/local/munki/munki-python']
-        _munki_python = [_x for _x in _munki_pythons if os.path.exists(_x)][0]
+
+        if any([os.path.exists(_p) for _p in _munki_pythons]):
+            _munki_python = [_x for _x in _munki_pythons if os.path.exists(_x)][0]
+        else:
+            _munki_python = ''
 
         _python_paths = {'mac_os_python_path': '/usr/bin/python',
                          'munki_python_path': _munki_python,
@@ -70,6 +74,7 @@ class PythonConditions(object):
                         _ver = _e.replace('Python ', '')
 
                     result[_k.replace('_path', '_ver')] = _ver
+
         return result
 
     def _process(self):
