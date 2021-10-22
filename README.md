@@ -17,3 +17,34 @@ The resulting package is generated in `./dist/pkg/`.
 
 ## Binaries
 All binaries called by the processors exist in macOS 10.15.7+. No intention to make these backwards compatible with older macOS versions.
+
+
+## Usage
+`munkicon` can be dropped directly into the munki conditions folder (`/usr/local/munki/conditions/`), however the prebuilt package installs the `munkicon` processor to `/usr/local/bin/munkicon` by default.
+It's recommended you place a shell script in the munki conditions folder that calls `munkicon` with the usage arguments that you would like to run.
+
+### Command line arguments
+```
+[carl@munkicon]:bin # ./munkicon -h
+usage: munkicon [-h] [--certificates] [--filevault] [--kexts] [--mdm-enrolled] [--pppcp] [--profiles] [--python] [--system-exts] [--system-setup] [--user-accts] [--purge]
+                [--dest [path]] [-v, --version]
+
+optional arguments:
+  -h, --help      show this help message and exit
+  --certificates  process certificate conditions from system keychain
+  --filevault     process FileVault conditions
+  --kexts         process kext conditions
+  --mdm-enrolled  process MDM enrolled conditions
+  --pppcp         process PPPCP conditions
+  --profiles      process profiles conditions
+  --python        process python conditions
+  --system-exts   process system extension conditions
+  --system-setup  process sytem setup conditions
+  --user-accts    process user account conditions
+  --purge         purges all existing information
+  --dest [path]   output conditions to specific destination plist
+  -v, --version   show program's version number and exit
+```
+
+## Conditions
+For more details about each condition processor, see the [wiki](https://github.com/carlashley/munkicon/wiki/Processors)
