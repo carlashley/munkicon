@@ -21,7 +21,18 @@ All binaries called by the processors exist in macOS 10.15.7+. No intention to m
 
 ## Usage
 `munkicon` can be dropped directly into the munki conditions folder (`/usr/local/munki/conditions/`), however the prebuilt package installs the `munkicon` processor to `/usr/local/bin/munkicon` by default.
-It's recommended you place a shell script in the munki conditions folder that calls `munkicon` with the usage arguments that you would like to run.
+
+It is recommended to use a shell script in the munki conditions folder that calls `munkicon`. This will provide flexibility in running all processors (no command line flags, or just run specific processors).
+
+For example, to run all processors:
+```
+/usr/local/bin/munkicon
+```
+
+To run specific processors (see Command Line Arguments below for usage):
+```
+/usr/local/bin/munkicon --kexts --user-accts --system-setup
+```
 
 ### Command line arguments
 ```
