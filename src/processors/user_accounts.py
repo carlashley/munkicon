@@ -138,7 +138,11 @@ class UserAccounts(object):
                     _is_volume_owner = _user.get('VolumeOwner')
                     _hr_user_name = _users_with_uid.get(_apfs_crypto_uuid)
 
-                    if _is_volume_owner and _apfs_crypto_type != 'PersonalRecovery':
+                    # When MDMRecovery exists as a crypto type, there is no human readable username that correlates, so indicate MDMRecovery user manually
+                    if not _hr_user_name and _apfs_crypto_type and _apfs_crypto_type == 'MDMRecovery':
+                        _hr_user_name = 'MDMRecovery'
+
+                    if _is_volume_owner and _apfs_crypto_type and _apfs_crypto_type != 'PersonalRecovery' and _hr_user_name:
                         _vol_own_users.add(_hr_user_name)
             except Exception:
                 pass
