@@ -82,15 +82,31 @@ unsetopt +o nomatch
 
 # Create package and sign/don't sign
 if [ "$INSTALLER_CERT" != "" ]; then
-    /usr/bin/productbuild --identifier ${BUNDLEID} \
-        --product ${REQUIREMENTS} \
-        --sign ${INSTALLER_CERT} \
-        --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    if [ ! $(sw_vers -productVersion) = 12.0.1 ]; then
+        /usr/bin/productbuild --identifier ${BUNDLEID} \
+            --sign ${INSTALLER_CERT} \
+            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    else
+        /usr/bin/productbuild --identifier ${BUNDLEID} \
+            --product ${REQUIREMENTS} \
+            --sign ${INSTALLER_CERT} \
+            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    fi
 else
-    /usr/bin/productbuild --identifier ${BUNDLEID} \
-        --product ${REQUIREMENTS} \
-        --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    if [ ! $(sw_vers -productVersion) = 12.0.1 ]; then
+        /usr/bin/productbuild --identifier ${BUNDLEID} \
+            --product ${REQUIREMENTS} \
+            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    else
+        /usr/bin/productbuild --identifier ${BUNDLEID} \
+            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+    fi
 fi
 
 # Delete component package
+if [ ! -f ${DIST_DIR}/${DIST_PKG} ]; then
+    echo 'Package build failed...'
+fi
+
+echo 'Removing temporary component package' ${DIST_DIR}/${COMPONENT_PKG}
 /bin/rm -f ${DIST_DIR}/${COMPONENT_PKG}
