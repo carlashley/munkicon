@@ -14,7 +14,7 @@ except ImportError:
 #       'filevault_status'
 #       'filevault_users'
 #       'filevault_encryption_in_progress'
-#       'filevailt_decryption_in_progress'
+#       'filevault_decryption_in_progress'
 #       'filevault_users'
 
 
@@ -48,7 +48,7 @@ class FileVaultConditions(object):
         """FileVault Status."""
         result = {'filevault_status': '',
                   'filevault_encryption_in_progress': '',
-                  'filevault_encryption_in_progress': ''}
+                  'filevault_decryption_in_progress': ''}
 
         _result = self._fdesetup(verb='status')
 
