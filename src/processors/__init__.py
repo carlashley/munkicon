@@ -116,7 +116,10 @@ def main():
 
     _process = {_k: _v for _k, _v in _args.__dict__.items() if _k in MODULES}
 
-    log_path = '/Library/Logs/munkicon.log'
+    default_log_folder = Path('/Library/Managed Installs/Logs')
+    default_log = '/Library/Managed Installs/Logs/munkicon.log'
+    alt_log = '/Library/Logs/munkicon.log'
+    log_path = default_log if default_log_folder.exists() else alt_log
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
     fh = logging.handlers.RotatingFileHandler(log_path, maxBytes=(1048576 * 10), backupCount=7)
