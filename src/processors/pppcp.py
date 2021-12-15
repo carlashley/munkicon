@@ -93,6 +93,9 @@ class PPPCPConditions(object):
         _mdmoverrides = '/Library/Application Support/com.apple.TCC/MDMOverrides.plist'
 
         if os.path.exists(_mdmoverrides):
+            if not os.access(_mdmoverrides, os.R_OK):
+                LOG.error('%s does not appear readable. Make sure Full Disk Access is granted to the parent process/application.' % _mdmoverrides)
+
             _overrides = plist.readPlist(path=_mdmoverrides)
 
             if _overrides:
