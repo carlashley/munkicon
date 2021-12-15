@@ -7,7 +7,7 @@ from os import geteuid, remove
 from sys import exit, stderr
 from pathlib import Path
 
-VERSION = '1.0.20211206'
+VERSION = '1.0.20211215'
 
 _ARGS = {
     'certificates': {'args': ['--certificates'],
@@ -117,8 +117,8 @@ def main():
     _process = {_k: _v for _k, _v in _args.__dict__.items() if _k in MODULES}
 
     default_log_folder = Path('/Library/Managed Installs/Logs')
-    default_log = '/Library/Managed Installs/Logs/munkicon.log'
-    alt_log = '/Library/Logs/munkicon.log'
+    default_log = Path('/Library/Managed Installs/Logs/munkicon.log')
+    alt_log = Path('/Library/Logs/munkicon.log')
     log_path = default_log if default_log_folder.exists() else alt_log
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
@@ -127,6 +127,9 @@ def main():
     fmt = logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     fh.setFormatter(fmt)
     log.addHandler(fh)
+
+    if log_path.exists() and log_path.stat().st_size > 0:
+        fh.doRollover()
 
     logging.getLogger(__name__).addHandler(logging.NullHandler())
 
