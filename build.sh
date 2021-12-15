@@ -82,25 +82,15 @@ unsetopt +o nomatch
 
 # Create package and sign/don't sign
 if [ "$INSTALLER_CERT" != "" ]; then
-    if [ ! $(sw_vers -productVersion) = 12.0.1 ]; then
-        /usr/bin/productbuild --identifier ${BUNDLEID} \
-            --sign ${INSTALLER_CERT} \
-            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
-    else
-        /usr/bin/productbuild --identifier ${BUNDLEID} \
-            --product ${REQUIREMENTS} \
-            --sign ${INSTALLER_CERT} \
-            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
-    fi
+    /usr/bin/productbuild --identifier ${BUNDLEID} \
+        --product ${REQUIREMENTS} \
+        --sign ${INSTALLER_CERT} \
+        --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
+        --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
 else
-    if [ ! $(sw_vers -productVersion) = 12.0.1 ]; then
-        /usr/bin/productbuild --identifier ${BUNDLEID} \
-            --product ${REQUIREMENTS} \
-            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
-    else
-        /usr/bin/productbuild --identifier ${BUNDLEID} \
-            --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
-    fi
+    /usr/bin/productbuild --identifier ${BUNDLEID} \
+        --product ${REQUIREMENTS} \
+        --package ${DIST_DIR}/${COMPONENT_PKG} ${DIST_DIR}/${DIST_PKG}
 fi
 
 # Delete component package
