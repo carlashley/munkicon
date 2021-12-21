@@ -15,6 +15,14 @@ The resulting package is generated in `./dist/pkg/`.
 ./build.sh /usr/local/munki/munki-python
 ```
 
+## Conditions not generated when running Managed Software Center
+Depending on the macOS version, some conditions may not be returned when running Managed Software Center interactively.
+- System Extensions
+- TCC/PPPCP
+
+These conditions should not be relied upon unless `managedsoftwareupdate` is being run interactively at the command line with elevated privileges (as `root`).
+These conditions are considered deprecated and will be removed in a future update sometime after 2021-12-21 AEST.
+
 ## Binaries
 All binaries called by the processors exist in macOS 10.15.7+. No intention to make these backwards compatible with older macOS versions.
 
