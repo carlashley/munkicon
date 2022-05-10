@@ -1,3 +1,17 @@
+# 2022-05-10
+For several personal and private reasons, I will no longer be able to actively maintain this repo.
+
+This repo will be marked read only from now on. No further support will be available.
+
+Thank you to everyone that has helped out with testing this over the years.
+
+Carl.
+
+
+
+
+
+
 This is a collection of conditional items scripts for munki that can also be used for "on device" conditions that might be beneficial in other deployment systems.
 
 ## DISCLAIMER
